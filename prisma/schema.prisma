@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Chercheur {
+  id            Int      @id @default(autoincrement())
+  fullName      String
+  email         String   @unique
+  password      String
+  position      String?
+  department    String?
+  phoneNumber   String?
+  cv            String?
+  spokenLanguages String?
+  keySkills     String?
+  description   String?
+  profileImage  String?
+  media         String?
+  universityORreaserchLAB String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  articles      Article[]
+  conversationsAsChercheur Conversation[] @relation("ChercheurConversations")
+}
+
+model Entreprise {
+  id            Int      @id @default(autoincrement())
+  companyName   String
+  email         String   @unique
+  password      String
+  position      String?
+  department    String?
+  phoneNumber   String?
+  description   String?
+  profileImage  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  projects      Project[]
+  conversationsAsEntreprise Conversation[] @relation("EntrepriseConversations")
+}
+
+model Article {
+  id             String   @id @default(cuid())
+  title          String
+  summary        String
+  researchDomain String
+  keyConcepts    String?
+  content        String?
+  image          String?
+  publicationYear Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  authorId       Int
+  author         Chercheur @relation(fields: [authorId], references: [id])
+}
+
+model Project {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String
+  domain           String
+  trl              String
+  budgetMin        Int
+  budgetMax        Int
+  deadline         DateTime
+  deliverables     String?
+  selectionCriteria String?
+  attachments      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  entrepriseId     Int
+  entreprise       Entreprise @relation(fields: [entrepriseId], references: [id])
+}
+
+model Conversation {
+  id          Int      @id @default(autoincrement())
+  chercheurId Int
+  entrepriseId Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  chercheur   Chercheur @relation("ChercheurConversations", fields: [chercheurId], references: [id])
+  entreprise  Entreprise @relation("EntrepriseConversations", fields: [entrepriseId], references: [id])
+  messages    Message[]
+
+  @@unique([chercheurId, entrepriseId])
+}
+
+model Message {
+  id             Int      @id @default(autoincrement())
+  content        String
+  senderId       Int
+  receiverId     Int
+  senderType     String   // "chercheur" ou "entreprise"
+  receiverType   String   // "chercheur" ou "entreprise"
+  conversationId Int
+  read           Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+}
+

@@ -1,0 +1,140 @@
+import Link from "next/link";
+import { useRouter } from 'next/navigation'
+import { FiBell, FiMessageSquare } from "react-icons/fi"; // Icônes modernes
+
+const Navbar = () => {
+  const profileImage = null; // remplacer par une URL si dispo
+  const router = useRouter()
+  const handleViewProfil = () => {
+    // Détection du type d'utilisateur
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('entrepriseEmail')) {
+        router.push('/profile-page-entreprise');
+        return;
+      }
+      if (localStorage.getItem('chercheurEmail')) {
+        router.push('/profil-page');
+        return;
+      }
+    }
+    // Par défaut
+    router.push('/profil-page');
+  }
+  const handlemessage = () => {
+    // Ici tu pourrais aussi valider le formulaire avant
+    router.push('/message-page') // remplace par le bon chemin
+  }
+  return (
+    <nav style={{ borderBottom: "1px solid #ccc", backgroundColor: "#fff" }}>
+      {/* Ligne bleue épaisse */}
+      <div
+        style={{
+          height: "25px", // plus gros
+          backgroundColor: "#002D62",
+          width: "100%",
+        }}
+      ></div>
+
+      {/* Contenu principal */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px 20px",
+        }}
+      >
+        {/* Logo et titre */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src="/logo.png"
+            alt="CollabNet Logo"
+            style={{ height: "40px", marginRight: "10px" }}
+          />
+          <span style={{ fontSize: "24px", fontWeight: "bold", color: "#002D62" }}>
+            CollabNet
+          </span>
+        </div>
+
+        {/* Menu + actions */}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {["/", "/department", "/researchers", "/companies", "/contact"].map(
+            (path, i) => (
+              <Link key={i} href={path}>
+                <span
+                  style={{
+                    margin: "0 10px",
+                    color: "#000",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {path === "/" ? "Home" : path.slice(1).charAt(0).toUpperCase() + path.slice(2)}
+                </span>
+              </Link>
+            )
+          )}
+
+          <button
+            style={{
+              margin: "0 10px",
+              padding: "5px 10px",
+              backgroundColor: "#002D62",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Sign out
+          </button>
+
+          {/* Profil */}
+          <div
+          onClick={handleViewProfil}
+            style={{
+              width: "35px",
+              height: "35px",
+              borderRadius: "50%",
+              backgroundColor: "#ccc",
+              overflow: "hidden",
+              marginRight: "15px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            title="User Profile"
+          >
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="User Profile"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              <span style={{ color: "#002D62", fontWeight: "bold" }}>U</span>
+            )}
+          </div>
+
+          {/* Icône Notification */}
+          <FiBell
+            size={24}
+            style={{ color: "#002D62", marginRight: "15px", cursor: "pointer" }}
+            title="Notifications"
+          />
+
+          {/* Icône Message */}
+          <FiMessageSquare
+          onClick={handlemessage}
+            size={24}
+            style={{ color: "#002D62", cursor: "pointer" }}
+            title="Messages"
+          />
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;

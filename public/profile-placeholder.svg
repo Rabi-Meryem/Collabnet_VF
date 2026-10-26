@@ -1,0 +1,7 @@
+<svg width="300" height="400" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="300" height="400" fill="#F3F4F6"/>
+<circle cx="150" cy="150" r="50" fill="#9CA3AF"/>
+<path d="M150 220C130 220 114 204 114 184C114 164 130 148 150 148C170 148 186 164 186 184C186 204 170 220 150 220Z" fill="white"/>
+<path d="M150 280C130 280 114 264 114 244C114 224 130 208 150 208C170 208 186 224 186 244C186 264 170 280 150 280Z" fill="white"/>
+<text x="150" y="330" text-anchor="middle" fill="#67748B" font-family="Arial" font-size="14">Add Profile Image</text>
+</svg> 
